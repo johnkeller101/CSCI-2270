@@ -19,6 +19,7 @@ public:
 	TodoItem* peek();
 	int getStackTop() { return stackTop; }
 	TodoItem** getStack() { return stack; }
+	void printStack();
 private:
 	int stackTop; //the index in stack[] that will be popped next 
 	TodoItem* stack[MAX_STACK_SIZE];

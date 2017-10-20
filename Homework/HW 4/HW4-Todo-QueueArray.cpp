@@ -87,8 +87,8 @@ TodoItem* TodoQueueArray::peek(){
 
 void TodoQueueArray::printQueue(){
 	for(int i=queueFront; i<=queueEnd;i++){
-		cout << queue[i]->todo;
-		if(i != queueEnd){ cout << ", ";}
+		cout << i << ": " << queue[i]->todo << endl;
+		// if(i != queueEnd){ cout << ", ";}
 	} 
 	cout << endl;
 }
@@ -97,19 +97,14 @@ void TodoQueueArray::printQueue(){
 int main(int argc, char const *argv[])
 {
 	TodoQueueArray* test = new TodoQueueArray;
-	test->enqueue("test item one");
-	test->printQueue();
-	test->enqueue("test item dos");
-	test->printQueue();
-	test->enqueue("test item three");
-	test->printQueue();
-	test->enqueue("test item 4");
-	test->printQueue();
-	test->enqueue("test item 5");
-	test->printQueue();
-	test->enqueue("test item 6666666");
-	test->printQueue();
+
+	test->enqueue("100");
+	test->enqueue("2");
+	test->enqueue("4");
+	test->enqueue("7");
 	test->dequeue();
+	test->enqueue("31");
+
 	test->printQueue();
 	return 0;
 }

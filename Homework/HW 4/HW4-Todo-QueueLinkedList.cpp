@@ -34,7 +34,7 @@ void TodoQueueLinkedList::enqueue(string todoItem){
 }
 
 void TodoQueueLinkedList::dequeue(){
-if(queueFront == NULL){
+	if(queueFront == NULL){
 		cout << "Queue empty, cannot dequeue an item." << endl;
 	} else {
 		// returnedElem = queueFront->todo;

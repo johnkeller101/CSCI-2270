@@ -63,13 +63,31 @@ TodoItem* TodoStackArray::peek(){
 	return NULL;
 }
 
+
+void TodoStackArray::printStack(){
+	for(int i=0; i<4;i++){
+		if(stack[i] != NULL){
+			cout << i << ": " << stack[i]->todo << endl;
+		}
+	} 
+	cout << endl;
+}
+
 int main(int argc, char const *argv[])
 {
 	TodoStackArray *test = new TodoStackArray;
-	test->push("todo number one");
-	test->push("todo number two");
-	cout << test->peek() << endl;
+
+	test->push("100");
+	test->push("2");
+	test->push("4");
+	test->push("8");
 	test->pop();
-	cout << test->peek() << endl;
+	test->push("31");
+
+
+
+	test->printStack();
+
+
 	return 0;
 }
