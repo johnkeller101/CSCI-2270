@@ -36,9 +36,16 @@ public:
 	void addMovieNode(int ranking, std::string title, int releaseYear, int quantity);
 	void findMovie(std::string title);
 	void rentMovie(std::string title);
+	// new functions for homework 6
+	void deleteMovie(std::string title);
+	void countMovies();
 
 	// additional helper methods
 	void printMovieHelper(MovieNode *tree);
+	MovieNode* max(MovieNode* tree);
+	MovieNode* deleteHelper(MovieNode* tree, std::string title);
+	MovieNode* min(MovieNode* tree);
+	void deleteAll(MovieNode* tree);
 
 private:
 	MovieNode* search(MovieNode* node, std::string title);
