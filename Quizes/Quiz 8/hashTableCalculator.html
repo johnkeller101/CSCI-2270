@@ -1,0 +1,277 @@
+
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!-
+The MIT License (MIT)
+
+Copyright (c) 2014 John Dalbey
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en]C-CCK-MCD NSCPCD47  (Win95; I) [Netscape]">
+   <meta name="Author" content="Dr. John Dalbey">
+   <title>HashTable Calculator</title>
+<style type="text/css"></style></head>
+<body onload="clearForm()" text="#000000" vlink="#800080" alink="#ff0080" bgcolor="#c0c0ff" link="#0000ff"  style="background-image:url(http://i.imgur.com/mpvIOLa.png); ">
+<script language="JavaScript">
+<!--
+// SystemTests: http://pastebin.com/raw.php?i=6WEgmay4
+var items = new Array();
+var divisor = 10;
+var maxSize = 26;
+var number;
+var divisor;
+var displayValue = ""
+var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+function clearForm()
+{
+   document.CalcForm.Display.value = "";   
+   document.CalcForm.Labels.value = "";   
+   document.CalcForm.Log.value = "";   
+   // clear the table
+   items = new Array();
+   for (var i=0; i < maxSize; i++)
+    {
+       items[i]="";
+    }
+   divisor = 10; 
+}
+function handleNumber()
+{
+   // Obtain input values from the HTML form
+   divisor = parseInt(document.CalcForm.txtModulo.value);
+   if (divisor > 26) divisor = 26;
+   number = parseInt(document.CalcForm.txtNum.value);
+   displayValue = document.CalcForm.txtNum.value;
+   document.CalcForm.txtNum.value = "";
+
+   // validate user input
+   if (number < 0 || isNaN(number))
+   {
+       alert("Invalid Input. Please enter positive numbers.");
+   }
+   else
+   {
+       determineStrategy();
+   }
+}
+function handleLetter()
+{
+   // Obtain input values from the HTML form
+   divisor = parseInt(document.CalcForm.txtModulo.value);
+   if (divisor > 26) divisor = 26;
+   var letter = document.CalcForm.txtLetter.value.toUpperCase();
+   number = alphabet.indexOf(letter)
+   displayValue = document.CalcForm.txtLetter.value;
+   document.CalcForm.txtLetter.value = "";
+
+   // validate user input
+   if (number < 0)
+   {
+       alert("Invalid Input. Please enter A-Z.");
+   }
+   else
+   {
+        determineStrategy();
+   }
+}
+
+function determineStrategy()
+{
+    if (document.CalcForm.strategy[0].checked)
+    {
+        showCalcs();
+    }
+    if (document.CalcForm.strategy[1].checked)
+    {
+        doLinearProbing();
+    }
+    if (document.CalcForm.strategy[2].checked)
+    {
+        doQuadraticProbing();
+    }
+}
+// No collision resolution
+function showCalcs()
+// Get the user input and show the results of the calculations
+{
+    // clear the display
+    document.CalcForm.Display.value = "";   
+    document.CalcForm.Labels.value = "";   
+
+    var rem = number % divisor;
+    var quot = Math.floor(number / divisor);
+    // Add the input number to the array (assuming no collision)
+    items[rem] += displayValue+" ";
+    // Update the log
+    document.CalcForm.Log.value += displayValue +"="+ quot+"*"+ divisor +"+"+rem+"\n";
+    // display the first column
+    for (var i=0; i < divisor; i++)
+    {
+       document.CalcForm.Labels.value += i+"\n";
+    }
+    // display the second column
+    for (var i=0; i < divisor; i++)
+    {
+       document.CalcForm.Display.value += items[i]+"\n";
+    }
+}
+function doLinearProbing()
+{
+	// clear the display
+	document.CalcForm.Display.value = "";   
+	document.CalcForm.Labels.value = "";   
+
+	var rem = number % divisor;
+	var quot = Math.floor(number / divisor);
+	var i = rem;
+	var probes = 1;
+
+	// Update the log
+	document.CalcForm.Log.value += displayValue+"="+ quot+"*"+ divisor +"+"+rem+"\n"
+
+    // while current spot is not available and not equal to number and not full
+    while(items[i] != "" && items[i] != displayValue && probes < divisor)
+    {
+	    i = (i + 1) % divisor;
+	    probes++;
+    }
+    // if we found a spot for number
+    if (items[i] == "")
+    {
+        // now place the number
+        items[i] = displayValue;
+    }
+    // Should we show probe count?
+    if (items[i] == displayValue)
+    {
+        msg = " probe"
+        if (probes > 1) msg = msg + "s"
+        msg = msg+ ".\n"        
+        document.CalcForm.Log.value +=  probes + msg;
+    }
+    else
+    {
+        document.CalcForm.Log.value += "Table full.\n"
+    }
+    
+	// display the first column
+	for (var i=0; i < divisor; i++)
+	{
+		document.CalcForm.Labels.value += i+"\n";
+	}
+
+	// display the second column
+	for (var i=0; i < divisor; i++)
+	{
+		document.CalcForm.Display.value += items[i]+"\n";
+	}
+}
+function doQuadraticProbing()
+{
+    // clear the display
+    document.CalcForm.Display.value = "";   
+    document.CalcForm.Labels.value = "";   
+
+    var rem = number % divisor;
+    var quot = Math.floor(number / divisor);
+    
+    //segment by Sean Reddell, jdalbey
+
+    //probe only if number isn't already mapped
+    var placed = items.indexOf(number) > -1;
+    var count = 0;
+    var idx = (rem + count * count) % divisor
+    // Update the log
+    document.CalcForm.Log.value += displayValue +"="+ quot+"*"+ divisor +"+"+rem+"\n" + idx+" "
+    
+    // while current spot is not available and not equal to number and not full
+    while(items[idx] != "" && items[idx] != displayValue && count+1 < divisor)    
+    {
+        count++;
+        idx = (rem + count * count) % divisor
+        document.CalcForm.Log.value += idx + " "
+    }
+    // if we found a spot for number
+    if (items[idx] == "")
+    {
+        // now place the number
+        items[idx] = displayValue;
+    }
+    // Should we show probe count?
+    if (items[idx] == displayValue)
+    {
+        msg = " probe"
+        if (count+1 > 1) msg = msg + "s"
+        msg = msg+ ".\n"        
+        document.CalcForm.Log.value +=  "\n"+(count+1) + msg;
+    }
+    else
+    {
+        document.CalcForm.Log.value += "\nNo spot available.\n"
+    }
+    
+    // display the first column
+    for (var i=0; i < divisor; i++)
+    {
+       document.CalcForm.Labels.value += i+"\n";
+    }
+    // display the second column
+    for (var i=0; i < divisor; i++)
+    {
+       document.CalcForm.Display.value += items[i]+"\n";
+    }
+}
+
+// -->
+</script>
+<h2>Hashtable Calculator</h2>
+<form name="CalcForm">
+Table Size &nbsp; <input size="3" name="txtModulo" type="text" value="10"> 
+ &nbsp;(max. 26)&nbsp;&nbsp; Mod &nbsp; <input size="3" name="mod" type="text" value="2">  <input name="go2" value="Enter" type="button" onclick="handleLetter()"> <input name="btnReset" value="Reset" onclick="clearForm()" type="button">
+<br>Add Integer&nbsp;<input size="3" name="txtNum" type="text" onkeydown="if (event.keyCode == 13) handleNumber()">
+ &nbsp;&nbsp;&nbsp;
+<input name="go1" value="Enter" type="button" onclick="handleNumber()">
+ &nbsp;&nbsp;&nbsp;
+
+ &nbsp;&nbsp;&nbsp;
+
+<br>
+ Collision Resolution Strategy: &nbsp;
+ <input type="radio" name="strategy" value="None" checked="">None&nbsp;
+<input type="radio" name="strategy" value="Linear">Linear&nbsp;
+<input type="radio" name="strategy" value="Quadratic">Quadratic&nbsp;
+<br>
+<textarea name="Labels" rows="27" cols="2" readonly></textarea>
+<textarea name="Display" rows="27" cols="23" readonly></textarea>
+<textarea name="Log" rows="27" cols="25" readonly></textarea>
+<br>
+
+</form>
+<hr width="100%">
+This calculator is for demonstration purposes only.
+<br><!-- Begin Last Modified Section --><script language="JavaScript" type="text/javascript">
+
+dateMod=document.lastModified; document.write(" Last modified on ");
+document.write(dateMod);
+
+</script> 
+<!-- End of Last Modified section -->
+<p></p>
+</body></html>
